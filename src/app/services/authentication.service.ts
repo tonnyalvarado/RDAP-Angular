@@ -23,10 +23,6 @@ export class AuthenticationService {
     this.options = new RequestOptions({ headers: this.headers });
   }
   login(username: String, password: String) {
-    const bodyString = {
-      'nick': username,
-      'password': password
-    };
     const user: User = new User(null, null, null, username, password);
     return this.http.post(environment.APIURL + '/login', user, this.options)
       .map((res: Response) => res.json())

@@ -1,21 +1,65 @@
-<div class="background-wrap">
-	<div class="background"></div>
+<div *ngIf="flagSuccess" [@fadeInOut] class="bg-success text-white" align="center">{{mensaje}}</div>
+<div *ngIf="page == 1" [@fadeInOut]>
+	<div *ngIf="flagError" class="error_login" [@fadeInOut]>{{mensaje}}</div>
+	<form #accesspanel="ngForm" (ngSubmit)="accesspanel.form.valid && login()" novalidate>
+		<h1 id="litheader">Login</h1>
+		<div class="inset">
+			<p>
+				<input type="text" name="username" id="email" placeholder="Usuario" required [(ngModel)]="model.nick"
+				 (ngModelChange)="flagError = false; flagSuccess = false" #nick="ngModel" [disabled]="cont>=10">
+			</p>
+			<p>
+				<input type="password" name="password" id="password" placeholder="Contraseña" [disabled]="cont>=10" [(ngModel)]="model.password"
+				 (ngModelChange)="flagError = false; flagSuccess = false" #password="ngModel">
+			</p>
+			<div class="nuevaCuenta">
+				<a (click)="nuevaCuenta()">Crear una cuenta</a>
+			</div>
+			<input class="loginLoginValue" type="hidden" name="service" value="login" />
+		</div>
+		<p class="p-container">
+			<input type="submit" name="Login" id="go" value="Iniciar sesión" [disabled]="loading || flagError || cont>=10">
+		</p>
+	</form>
 </div>
-<div *ngIf="flagError" class="error_login">{{mensaje}}</div>
-<form #accesspanel="ngForm" (ngSubmit)="accesspanel.form.valid && login()" novalidate>
-	<h1 id="litheader">Login</h1>
-	<div class="inset">
-		<p>
-			<input type="text" name="username" id="email" placeholder="Usuario" required [(ngModel)]="model.nick"
-			 (ngModelChange)="flagError = false" #nick="ngModel" [disabled]="cont>=10">
-		</p>
-		<p>
-			<input type="password" name="password" id="password" placeholder="Contraseña" [disabled]="cont>=10" [(ngModel)]="model.password"
-			 (ngModelChange)="flagError = false" #password="ngModel">
-		</p>
-		<input class="loginLoginValue" type="hidden" name="service" value="login" />
-	</div>
-	<p class="p-container">
-		<input type="submit" name="Login" id="go" value="Iniciar sesión" [disabled]="loading || flagError || cont>=10">
-	</p>
-</form>
+<div *ngIf="page == 2" [@fadeInOut]>
+	<div *ngIf="flagError" class="error_login" [@fadeInOut]>{{mensaje}}</div>
+	<form #createUser="ngForm" (ngSubmit)="crearUsuario()" novalidate>
+		<h1 id="litheader">Crear usuario</h1>
+		<div class="inset">
+			<p>
+				<input type="text" name="name" id="nameUser" placeholder="Nombre" required [(ngModel)]="modelUser.name"
+				 (ngModelChange)="flagError = false; flagSuccess = false" #nameUser="ngModel">
+			</p>
+			<p>
+				<input type="text" name="email" id="emailUser" placeholder="Email" required [(ngModel)]="modelUser.email"
+				 (ngModelChange)="flagError = false; flagSuccess = false" #emailUser="ngModel">
+			</p>
+			<p>
+				<input type="text" name="username" id="usernameUser" placeholder="Usuario" required [(ngModel)]="modelUser.nick"
+				 (ngModelChange)="flagError = false; flagSuccess = false" #nickUser="ngModel">
+			</p>
+			<p>
+				<input type="password" name="password" id="password" placeholder="Contraseña" [(ngModel)]="modelUser.password"
+				 (ngModelChange)="flagError = false; flagSuccess = false" #passwordUser="ngModel">
+			</p>
+			<p>
+					<input type="password" name="passwordConf" id="passwordConf" placeholder="Confirmar contraseña" [(ngModel)]="confContrasena"
+					 (ngModelChange)="flagError = false; flagSuccess = false" #confCont="ngModel">
+				</p>
+			<input class="loginLoginValue" type="hidden" name="service" value="login" />
+		</div>
+		<div class="row">
+			<div class="col-xs-6">
+				<p class="p-container">
+					<input type="submit" name="addUser" id="goUser" value="Guardar usuario" [disabled]="loading || flagError">
+				</p>
+			</div>
+			<div class="col-xs-6">
+				<p class="p-container">
+					<input type="button" name="cancel" value="Cancelar" (click)="cancelar()">
+				</p>
+			</div>
+		</div>
+	</form>
+</div>

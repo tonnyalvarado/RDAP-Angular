@@ -1,0 +1,31 @@
+@import '../../sass/styles.scss';
+.table {
+  width: auto;
+}
+.table:before  {
+  left: 293px;
+}
+.table:after {
+  left: 235px;
+}
+.table h1:after {
+  width: 650px;
+  margin-left: 330px;
+}
+.scroll {
+  max-height: 500px;
+  overflow-y: auto;
+}
+.footer {
+  text-align: center;
+  margin: 20px 0 10px;
+}
+.footer button {
+  margin-right: 10px;
+  margin-left: 10px;
+  background: $inset;
+  color: $colorBackground;
+}
+.footer button:hover {
+  background: $colorGradient1;
+}

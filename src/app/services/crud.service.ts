@@ -12,15 +12,13 @@ import * as Modelos from '../modelos/models';
 export class CrudService {
   headers: Headers;
   options: RequestOptions;
-  optionsWUser: RequestOptions;
   // Al iniciar el servicio se establecen las opciones de las solicitudes http
   constructor(private http: Http) {
     this.headers = new Headers({
-      'Content-Type': 'application/json; multipart/form-data',
+      'Content-Type': 'application/json',
       'Accept': 'application/json'
     });
     this.options = new RequestOptions({ headers: this.headers });
-    this.optionsWUser = new RequestOptions({ headers: this.headers });
     this.options.headers.set('Authorization', 'Basic ' + sessionStorage.getItem('auth'));
   }
   /* Funcion create

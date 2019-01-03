@@ -3,14 +3,27 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AuthenticationService } from '../services/authentication.service';
 import { CrudService } from '../services/crud.service';
 import * as Modelos from '../modelos/models';
+import { trigger, style, animate, transition } from '@angular/animations';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
+  animations: [
+    trigger('fadeInOut', [
+      transition(':enter', [   // :enter is alias to 'void => *'
+        style({ opacity: 0 }),
+        animate(600, style({ opacity: 1 }))
+      ]),
+      transition(':leave', [   // :leave is alias to '* => void'
+        animate(600, style({ opacity: 0 }))
+      ])
+    ])
+  ],
 })
 export class LoginComponent implements OnInit {
-  model: any = {};
+  model: Modelos.User;
+  modelUser: Modelos.User;
   loading = false;
   returnUrl: string;
   flagError: boolean;
@@ -18,12 +31,18 @@ export class LoginComponent implements OnInit {
   mensaje: string;
   user: Modelos.User;
   idSucursal: string;
+  page: number;
+  confContrasena: String;
+  flagSuccess: boolean;
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private auth: AuthenticationService) {
 
     this.cont = 0;
+    this.page = 1;
+    this.modelUser = new Modelos.User();
+    this.model = new Modelos.User();
   }
   ngOnInit() {
     this.auth.logout();
@@ -58,6 +77,43 @@ export class LoginComponent implements OnInit {
         }
         this.loading = false;
       });
+    }
+  }
+  nuevaCuenta() {
+    this.page = 2;
+    this.limpiarCampos();
+  }
+  limpiarCampos() {
+    this.flagError = false;
+    this.modelUser = new Modelos.User();
+    this.model = new Modelos.User();
+    this.confContrasena = null;
+    this.flagSuccess = false;
+  }
+  cancelar() {
+    this.page = 1;
+    this.limpiarCampos();
+  }
+  crearUsuario() {
+    if (this.validarCampos()) {
+      this.mensaje = 'El Usuario se ha creado correctamente';
+      this.flagSuccess = true;
+      setTimeout(() => {
+        this.flagSuccess = false;
+      }, 2000);
+    } else {
+      return;
+    }
+  }
+  validarCampos(): boolean {
+    if (!this.modelUser.name || !this.modelUser.email || !this.modelUser.nick || !this.modelUser.password ||
+      this.modelUser.password !== this.confContrasena) {
+      this.flagError = true;
+      this.modelUser.password !== this.confContrasena ? this.mensaje = 'La contraseña no coincide' :
+        this.mensaje = 'Favor de llenar todos los campos';
+      return false;
+    } else {
+      return true;
     }
   }
 }
