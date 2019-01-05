@@ -29,3 +29,9 @@
 .footer button:hover {
   background: $colorGradient1;
 }
+.footer button:focus {
+  outline: 5px auto $inset;
+}
+.footer button:disabled, .footer button:disabled:hover {
+  background: $disabled;
+}

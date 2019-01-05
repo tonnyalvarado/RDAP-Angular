@@ -71,10 +71,24 @@ export class GalileoService {
       return null;
     }
   }
+
   getGalileoSelectedUL() {
     return this.galileoSelectedUL.asObservable();
   }
+
   closeGalileoService() {
     this.subscriptionGalileos.unsubscribe();
+  }
+
+  updateGalileo(galileo: Modelos.Galileo) {
+    let g = this.galileos.find(f => f._id === galileo._id);
+    if (g) {
+      g = galileo;
+    }
+    this.galileosUpdated.next([...this.galileos]);
+  }
+  deleteGalileo(galileo: Modelos.Galileo) {
+    this.galileos.splice(this.galileos.indexOf(galileo), 1);
+    this.galileosUpdated.next([...this.galileos]);
   }
 }

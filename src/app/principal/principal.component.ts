@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy,  ElementRef, ViewChild } from '@angular/core';
 import * as Modelos from '../modelos/models';
 import * as Servicios from '../services/services';
 import { trigger, style, animate, transition } from '@angular/animations';
@@ -40,6 +40,8 @@ export class PrincipalComponent implements OnInit, OnDestroy {
   galileos: Modelos.Galileo[];
   galileosSub: Subscription;
   galileoSelected: Modelos.Galileo;
+  flagEdit: boolean;
+  @ViewChild('createPanel') form: NgForm;
   constructor(private galileoService: Servicios.GalileoService, public dialog: MatDialog) {
     this.message = null;
   }
@@ -83,6 +85,9 @@ export class PrincipalComponent implements OnInit, OnDestroy {
     }, 2000);
   }
   onRowSelect(row: Modelos.Galileo) {
+    if (this.flagEdit) {
+      this.cancelModify(this.form);
+    }
     this.galileoSelected = row;
   }
   openDialog(): void {
@@ -94,5 +99,37 @@ export class PrincipalComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
     });
+  }
+  modify() {
+    this.flagEdit = true;
+    this.form.setValue({
+      nombre: this.galileoSelected.nombre,
+      calle: this.galileoSelected.ubicacion.calle,
+      numero: this.galileoSelected.ubicacion.numero,
+      colonia: this.galileoSelected.ubicacion.colonia,
+      municipio: this.galileoSelected.ubicacion.municipio,
+      estado: this.galileoSelected.ubicacion.estado,
+      pais: this.galileoSelected.ubicacion.pais
+    });
+  }
+  saveChanges(form: NgForm) {
+    this.galileoSelected.nombre = form.value.nombre;
+    this.galileoSelected.ubicacion.calle = form.value.calle;
+    this.galileoSelected.ubicacion.numero = form.value.numero;
+    this.galileoSelected.ubicacion.colonia = form.value.colonia;
+    this.galileoSelected.ubicacion.municipio = form.value.municipio;
+    this.galileoSelected.ubicacion.estado = form.value.estado;
+    this.galileoSelected.ubicacion.pais = form.value.pais;
+    this.galileoService.updateGalileo(this.galileoSelected);
+    this.showAlert('Los cambios se guardaron correctamente');
+    this.cancelModify(form);
+  }
+  cancelModify(form: NgForm) {
+    form.reset();
+    this.galileoSelected = null;
+    this.flagEdit = false;
+  }
+  delete() {
+    this.galileoService.deleteGalileo(this.galileoSelected);
   }
 }
